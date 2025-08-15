@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="ru"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Переход…</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0b0b0f">
+<style>
+  html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#0b0b0f;color:#fff}
+  .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:20px}
+  .card{max-width:520px;width:100%;text-align:center;background:#ffffff12;border:1px solid #ffffff22;border-radius:16px;padding:20px 18px;backdrop-filter:blur(3px);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  h1{font-size:20px;margin:0 0 8px}
+  p{margin:6px 0 0;color:#ffffffcc;font-size:14px}
+  .btn{margin-top:14px;display:inline-block;background:#ffd166;color:#231a00;font-weight:800;border-radius:999px;padding:12px 18px;text-decoration:none;border:none;cursor:pointer}
+  .hint{margin-top:8px;font-size:12px;color:#ffffff99}
+  .spin{width:24px;height:24px;border-radius:50%;border:3px solid #ffffff55;border-top-color:#ffd166;margin:10px auto 6px;animation:spin 0.9s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head><body>
+<div class="wrap"><div class="card">
+  <div class="spin"></div>
+  <h1>Готовим переход…</h1>
+  <p>Секунду: откроем рекламную страницу и перенаправим дальше.</p>
+  <button class="btn" id="go">Продолжить</button>
+  <div class="hint">Если не перенаправило автоматически — нажмите кнопку.</div>
+</div></div>
+
+<script>
+  // ---- настройки
+  const LANDING = "https://natopchane.github.io/tadjichki/";
+  const AD1 = "https://www.profitableratecpm.com/cmzug8vp2s?key=a11f38e19a3386812609aa0186d473f0";
+  const AD2 = "https://www.profitableratecpm.com/ydzd1928?key=2f81c6b57bb6cbab80619d1985d10363ac";
+  const DELAY_TO_LANDING = 1200; // мс до перехода на лендинг
+
+  function tryOpen(url){
+    // 1) пробуем window.open
+    let win = null;
+    try{ win = window.open(url, "_blank", "noopener,noreferrer"); }catch(e){}
+    if (win) return true;
+    // 2) пробуем "виртуальный клик" по ссылке (иногда проходит там, где window.open блокируется)
+    const a = document.createElement("a");
+    a.href = url; a.target = "_blank"; a.rel = "noopener";
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    // Проверить невозможно, считаем попыткой
+    return false;
+  }
+
+  function fireAds(){
+    // Сначала основной, затем запасной
+    let opened = tryOpen(AD1);
+    if (!opened) { tryOpen(AD2); }
+  }
+
+  function proceed(){
+    fireAds();
+    // Всегда уходим на лендинг — даже если попап заблокирован
+    setTimeout(()=>{ location.href = LANDING; }, DELAY_TO_LANDING);
+  }
+
+  // Автозапуск при загрузке
+  document.addEventListener("DOMContentLoaded", proceed);
+  // Кнопка "Продолжить"
+  document.getElementById("go").addEventListener("click", proceed, {once:true});
+</script>
+<noscript><meta http-equiv="refresh" content="0;url=https://natopchane.github.io/tadjichki/"></noscript>
+</body></html>
